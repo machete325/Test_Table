@@ -1,0 +1,36 @@
+.tableContainer {
+  display: grid;
+}
+
+.titleContainer {
+  display: grid;
+  padding-top: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.button {
+  justify-self: end;
+  align-self: center;
+}
+
+.title {
+  justify-self: start;
+  align-self: center;
+}
+
+.Container {
+  display: grid;
+  grid-area: 'c';
+  grid-template-rows: 80px 1fr;
+}
+
+.DialogContent {
+  width: 500px;
+  min-height: 400px;
+}
+
+.ColumnItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
