@@ -11,7 +11,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
 import s from './Table.module.css';
 import Column from './Column/Column';
 import { DndProvider } from 'react-dnd';
@@ -20,9 +19,15 @@ import MovableItem from './MovableItem/MovableItem';
 
 const Table = (props) => {
   const [open, setOpen] = useState(false);
-  const [isFirstColumn, setIsFirstColumn] = useState(true);
+  let SearchElement = React.createRef();
 
-  const Item = <MovableItem setIsFirstColumn={setIsFirstColumn} />;
+  useEffect(() => {
+    props.setKeysTable(props.table.tableData);
+  }, []);
+
+  useEffect(() => {
+    props.setSortedTableData(props.table.tableData, props.table.keysTableData);
+  }, [props.table.keysTableData]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,14 +37,41 @@ const Table = (props) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    props.setKeysTable(props.table.tableData);
+  const setSortedTableData = () => {
     props.setSortedTableData(props.table.tableData, props.table.keysTableData);
-  }, [props.table.keysTableData]);
+    setOpen(false);
+  };
 
-  debugger;
+  // Returning items for the columns of the modal window
+  const returnItemsForColumn = (columnName, search_word) => {
+    let result = props.table.keysTableData.filter((e) =>
+      e.column === 'Column 2' ? e : e.key.toLowerCase().startsWith(search_word.toLowerCase()),
+    );
+    return result
+      .filter((item) => item.column === columnName)
+      .map((item) => (
+        <MovableItem
+          name={item.key}
+          updateKeysTable={props.updateKeysTable}
+          keysTableData={props.table.keysTableData}
+          column={item.column}
+        />
+      ));
+  };
 
-  const returnItemsForColumn = (columnName) => {};
+  // Return actual cells for the table
+  const returnCell = (row) => {
+    let arr = [];
+    for (let key in row) {
+      arr.push(<TableCell align="center">{row[key]}</TableCell>);
+    }
+    return arr;
+  };
+
+  const onSearch = () => {
+    let searchWord = SearchElement.current.value;
+    props.setNewText(searchWord, props.table.keysTableData);
+  };
 
   return (
     <div className={s.Container}>
@@ -54,19 +86,31 @@ const Table = (props) => {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">
-            <DialogTitle id="alert-dialog-title">Title</DialogTitle>
+            <DialogTitle id="alert-dialog-title"> Select Grid Columns</DialogTitle>
             <DialogContent className={s.DialogContent}>
-              <TextField id="outlined-search" label="Search..." type="search" variant="outlined" />
+              <div className={s.inputContainer}>
+                <input
+                  className={s.input}
+                  onChange={onSearch}
+                  ref={SearchElement}
+                  placeholder="Search..."
+                  value={props.table.newText}
+                />
+              </div>
               <DndProvider backend={HTML5Backend}>
                 <div className={s.ColumnItem}>
-                  <Column title="Column 1">{isFirstColumn && Item}</Column>
-                  <Column title="Column 2">{!isFirstColumn && Item}</Column>
+                  <Column text="List of Columns" title="Column 1">
+                    {returnItemsForColumn('Column 1', props.table.newText)}
+                  </Column>
+                  <Column text="Checked Columns" title="Column 2">
+                    {returnItemsForColumn('Column 2', props.table.newText)}
+                  </Column>
                 </div>
               </DndProvider>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} variant="contained" color="primary" autoFocus>
-                Agree
+              <Button onClick={setSortedTableData} variant="contained" color="primary" autoFocus>
+                Apply
               </Button>
             </DialogActions>
           </Dialog>
@@ -85,18 +129,12 @@ const Table = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {props.table.sortedTableData[0] !== undefined &&
+                Object.keys(props.table.sortedTableData[0]).length === 0 && (
+                  <div className={s.TableInfo}>Please select columns to display the table</div>
+                )}
               {props.table.sortedTableData.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell align="center">{row.id}</TableCell>
-                  <TableCell align="center">{row.FirstName}</TableCell>
-                  <TableCell align="center">{row.LastName}</TableCell>
-                  <TableCell align="center">{row.Email}</TableCell>
-                  <TableCell align="center">{row.Role}</TableCell>
-                  <TableCell align="center">{row.BDay}</TableCell>
-                  <TableCell align="center">{row.Phone}</TableCell>
-                  <TableCell align="center">{row.Country}</TableCell>
-                  <TableCell align="center">{row.Password}</TableCell>
-                </TableRow>
+                <TableRow key={row.id}>{returnCell(row)}</TableRow>
               ))}
             </TableBody>
           </TableMaterial>

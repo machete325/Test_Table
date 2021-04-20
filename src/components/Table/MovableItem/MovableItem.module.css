@@ -1,11 +1,42 @@
 .item {
-  border-radius: 10px;
-  background-color: #fff3f3;
+  background-color: rgba(96, 110, 138, 0.1);
+  border-radius: 4px;
   height: 40px;
-  width: 150px;
+  width: 190px;
   margin: 10px auto;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
   align-items: center;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+  transition: 0.3s;
+}
+
+.item:hover {
+  background: rgba(96, 110, 138, 0.3);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button {
+  display: none;
+  justify-content: end;
+  padding-right: 10px;
+  transition: 0.3s;
+}
+
+.item:hover .button {
+  display: grid;
+  justify-content: end;
+  padding-right: 10px;
+  transition: 0.3s;
+}
+
+.item:hover .button .ButtonIcon {
+  opacity: 0.5;
+}
+
+.itemName {
+  display: grid;
+  padding-left: 10px;
 }

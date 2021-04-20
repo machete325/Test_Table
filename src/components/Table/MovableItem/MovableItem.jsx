@@ -1,15 +1,27 @@
 import s from './MovableItem.module.css';
 import { useDrag } from 'react-dnd';
+import CancelIcon from '@material-ui/icons/Cancel';
 
-const MovableItem = ({ setIsFirstColumn }) => {
+const MovableItem = ({ name, updateKeysTable, keysTableData, column }) => {
+  const changeItemColumn = (currentItem, columnName) => {
+    const keysTable = keysTableData.map((e) => {
+      return {
+        ...e,
+        column: e.key === currentItem.name ? columnName : e.column,
+      };
+    });
+    return updateKeysTable(keysTable);
+  };
+
   const [{ isDragging }, drag] = useDrag({
     type: 'TableKey',
+    item: { name, type: 'TableKey' },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (dropResult && dropResult.name === 'Column 1') {
-        setIsFirstColumn(true);
+        changeItemColumn(item, 'Column 1');
       } else {
-        setIsFirstColumn(false);
+        changeItemColumn(item, 'Column 2');
       }
     },
     collect: (monitor) => ({
@@ -17,10 +29,20 @@ const MovableItem = ({ setIsFirstColumn }) => {
     }),
   });
 
+  const onDeleteItem = () => {
+    let item = { name, type: 'TableKey' };
+    changeItemColumn(item, 'Column 1');
+  };
+
   const opacity = isDragging ? 0.4 : 1;
   return (
     <div ref={drag} className={s.item} style={{ opacity }}>
-      id
+      <div className={s.itemName}>{name}</div>
+      {column !== 'Column 1' && (
+        <div className={s.button}>
+          <CancelIcon className={s.ButtonIcon} onClick={onDeleteItem}></CancelIcon>
+        </div>
+      )}
     </div>
   );
 };

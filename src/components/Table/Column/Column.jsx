@@ -9,7 +9,7 @@ const Column = (props) => {
 
   return (
     <div ref={drop} className={s.column}>
-      {props.title}
+      {props.text}
       {props.children}
     </div>
   );

@@ -1,5 +1,7 @@
 const KEYS_TABLE = 'KEYS_TABLE';
-const SET_SORTED_TABLE_DATA = 'SET_TABLE_DATA';
+const SET_SORTED_TABLE_DATA = 'SET_SORTED_TABLE_DATA';
+const UPDATE_KEYS_TABLE = 'UPDATE_KEYS_TABLE';
+const SET_NEW_TEXT = 'SET_NEW_TEXT';
 
 let initialState = {
   tableData: [
@@ -61,39 +63,59 @@ let initialState = {
   ],
   keysTableData: [],
   sortedTableData: [],
+  newText: '',
 };
 
 const tableReducer = (state = initialState, action) => {
   switch (action.type) {
+    // We take the keys from the incoming object
     case KEYS_TABLE: {
-      let data = action.tableData[0];
+      let data = [...action.tableData];
       let dataKeys = [];
-      for (let keys in data) {
+      for (let keys in data[0]) {
         dataKeys = [...dataKeys, { key: keys, column: 'Column 1' }];
       }
       let stateCopy = {
         ...state,
-        keysTableData: dataKeys,
+        keysTableData: [...dataKeys],
       };
       return stateCopy;
     }
+    // Remove non-displayable keys from the object
     case SET_SORTED_TABLE_DATA: {
-      let keys = action.keysTableData;
+      let keys = [...action.keysTableData];
       keys = keys.filter((e) => e.column === 'Column 1');
       let sortKeys = keys.map((item) => {
         return item.key;
       });
-      let tableData = action.tableData;
-      tableData.forEach((elem) => {
+
+      let newTableData = JSON.parse(JSON.stringify(action.tableData));
+      newTableData.forEach((elem) => {
         for (let key of Object.keys(elem)) {
           sortKeys.includes(key) && delete elem[key];
         }
       });
+
       let stateCopy = {
         ...state,
-        sortedTableData: tableData,
+        sortedTableData: [...newTableData],
       };
-      debugger;
+      return stateCopy;
+    }
+    // Update key information
+    case UPDATE_KEYS_TABLE: {
+      let stateCopy = {
+        ...state,
+        keysTableData: [...action.keysTableData],
+      };
+      return stateCopy;
+    }
+    // Writing text to the state
+    case SET_NEW_TEXT: {
+      let stateCopy = {
+        ...state,
+        newText: action.newText,
+      };
       return stateCopy;
     }
     default:
@@ -112,6 +134,21 @@ export const setSortedTableDataAc = (tableData, keysTableData) => {
   return {
     type: SET_SORTED_TABLE_DATA,
     tableData,
+    keysTableData,
+  };
+};
+
+export const updateKeysTableAc = (keysTableData) => {
+  return {
+    type: UPDATE_KEYS_TABLE,
+    keysTableData,
+  };
+};
+
+export const setNewTextAc = (newText, keysTableData) => {
+  return {
+    type: SET_NEW_TEXT,
+    newText,
     keysTableData,
   };
 };
