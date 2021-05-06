@@ -19,11 +19,7 @@ import MovableItem from './MovableItem/MovableItem';
 
 const Table = (props) => {
   const [open, setOpen] = useState(false);
-  let SearchElement = React.createRef();
-
-  useEffect(() => {
-    props.setKeysTable(props.table.tableData);
-  }, []);
+  const SearchElement = React.createRef();
 
   useEffect(() => {
     props.setSortedTableData(props.table.tableData, props.table.keysTableData);
@@ -44,14 +40,15 @@ const Table = (props) => {
 
   // Returning items for the columns of the modal window
   const returnItemsForColumn = (columnName, search_word) => {
-    let result = props.table.keysTableData.filter((e) =>
-      e.column === 'Column 2' ? e : e.key.toLowerCase().startsWith(search_word.toLowerCase()),
+    const result = props.table.keysTableData.filter((e) =>
+      e.column === 'Column 2' ? e : e.label.toLowerCase().startsWith(search_word.toLowerCase()),
     );
     return result
       .filter((item) => item.column === columnName)
       .map((item) => (
         <MovableItem
           name={item.key}
+          label={item.label}
           updateKeysTable={props.updateKeysTable}
           keysTableData={props.table.keysTableData}
           column={item.column}
@@ -69,7 +66,7 @@ const Table = (props) => {
   };
 
   const onSearch = () => {
-    let searchWord = SearchElement.current.value;
+    const searchWord = SearchElement.current.value;
     props.setNewText(searchWord, props.table.keysTableData);
   };
 

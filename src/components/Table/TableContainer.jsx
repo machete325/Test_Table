@@ -1,11 +1,6 @@
 import { connect } from 'react-redux';
 import Table from './Table';
-import {
-  setKeysTableAc,
-  setSortedTableDataAc,
-  updateKeysTableAc,
-  setNewTextAc,
-} from '../../redux/table_reducer';
+import { setSortedTableDataAc, updateKeysTableAc, setNewTextAc } from '../../redux/table_reducer';
 
 let mapStateToProps = (state) => {
   return {
@@ -15,9 +10,6 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps = (dispatch) => {
   return {
-    setKeysTable: (tableData) => {
-      dispatch(setKeysTableAc(tableData));
-    },
     setSortedTableData: (tableData, keysTableData) => {
       dispatch(setSortedTableDataAc(tableData, keysTableData));
     },

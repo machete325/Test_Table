@@ -2,7 +2,7 @@ import s from './MovableItem.module.css';
 import { useDrag } from 'react-dnd';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-const MovableItem = ({ name, updateKeysTable, keysTableData, column }) => {
+const MovableItem = ({ name, label, updateKeysTable, keysTableData, column }) => {
   const changeItemColumn = (currentItem, columnName) => {
     const keysTable = keysTableData.map((e) => {
       return {
@@ -37,7 +37,7 @@ const MovableItem = ({ name, updateKeysTable, keysTableData, column }) => {
   const opacity = isDragging ? 0.4 : 1;
   return (
     <div ref={drag} className={s.item} style={{ opacity }}>
-      <div className={s.itemName}>{name}</div>
+      <div className={s.itemName}>{label}</div>
       {column !== 'Column 1' && (
         <div className={s.button}>
           <CancelIcon className={s.ButtonIcon} onClick={onDeleteItem}></CancelIcon>

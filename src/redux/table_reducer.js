@@ -1,4 +1,3 @@
-const KEYS_TABLE = 'KEYS_TABLE';
 const SET_SORTED_TABLE_DATA = 'SET_SORTED_TABLE_DATA';
 const UPDATE_KEYS_TABLE = 'UPDATE_KEYS_TABLE';
 const SET_NEW_TEXT = 'SET_NEW_TEXT';
@@ -61,26 +60,23 @@ let initialState = {
       Password: 'admin',
     },
   ],
-  keysTableData: [],
+  keysTableData: [
+    { key: 'id', label: 'ID', column: 'Column 2' },
+    { key: 'FirstName', label: 'First Name', column: 'Column 2' },
+    { key: 'LastName', label: 'Last Name', column: 'Column 2' },
+    { key: 'Email', label: 'Email', column: 'Column 2' },
+    { key: 'Role', label: 'Role', column: 'Column 1' },
+    { key: 'BDay', label: 'Birthday', column: 'Column 1' },
+    { key: 'Phone', label: 'Phone', column: 'Column 1' },
+    { key: 'Country', label: 'Country', column: 'Column 1' },
+    { key: 'Password', label: 'Password', column: 'Column 1' },
+  ],
   sortedTableData: [],
   newText: '',
 };
 
 const tableReducer = (state = initialState, action) => {
   switch (action.type) {
-    // We take the keys from the incoming object
-    case KEYS_TABLE: {
-      let data = [...action.tableData];
-      let dataKeys = [];
-      for (let keys in data[0]) {
-        dataKeys = [...dataKeys, { key: keys, column: 'Column 1' }];
-      }
-      let stateCopy = {
-        ...state,
-        keysTableData: [...dataKeys],
-      };
-      return stateCopy;
-    }
     // Remove non-displayable keys from the object
     case SET_SORTED_TABLE_DATA: {
       let keys = [...action.keysTableData];
@@ -96,7 +92,7 @@ const tableReducer = (state = initialState, action) => {
         }
       });
 
-      let stateCopy = {
+      const stateCopy = {
         ...state,
         sortedTableData: [...newTableData],
       };
@@ -104,7 +100,7 @@ const tableReducer = (state = initialState, action) => {
     }
     // Update key information
     case UPDATE_KEYS_TABLE: {
-      let stateCopy = {
+      const stateCopy = {
         ...state,
         keysTableData: [...action.keysTableData],
       };
@@ -112,7 +108,7 @@ const tableReducer = (state = initialState, action) => {
     }
     // Writing text to the state
     case SET_NEW_TEXT: {
-      let stateCopy = {
+      const stateCopy = {
         ...state,
         newText: action.newText,
       };
@@ -121,13 +117,6 @@ const tableReducer = (state = initialState, action) => {
     default:
       return state;
   }
-};
-
-export const setKeysTableAc = (tableData) => {
-  return {
-    type: KEYS_TABLE,
-    tableData,
-  };
 };
 
 export const setSortedTableDataAc = (tableData, keysTableData) => {
