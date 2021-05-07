@@ -120,7 +120,7 @@ const Table = (props) => {
               <TableRow>
                 {props.table.keysTableData.map((item) => {
                   if (item.column !== 'Column 1') {
-                    return <TableCell align="center">{item.key}</TableCell>;
+                    return <TableCell align="center">{item.label}</TableCell>;
                   }
                 })}
               </TableRow>

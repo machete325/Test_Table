@@ -81,7 +81,7 @@ const tableReducer = (state = initialState, action) => {
     case SET_SORTED_TABLE_DATA: {
       let keys = [...action.keysTableData];
       keys = keys.filter((e) => e.column === 'Column 1');
-      let sortKeys = keys.map((item) => {
+      const sortKeys = keys.map((item) => {
         return item.key;
       });
 
@@ -106,6 +106,7 @@ const tableReducer = (state = initialState, action) => {
       };
       return stateCopy;
     }
+
     // Writing text to the state
     case SET_NEW_TEXT: {
       const stateCopy = {
